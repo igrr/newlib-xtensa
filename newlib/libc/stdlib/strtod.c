@@ -123,6 +123,7 @@ THIS SOFTWARE.
 /* #endif */
 
 #include "locale.h"
+#include "../machine/xtensa/pgmspace.h"
 
 #ifdef IEEE_Arith
 #ifndef NO_IEEE_Scale
@@ -130,7 +131,7 @@ THIS SOFTWARE.
 #undef tinytens
 /* The factor of 2^106 in tinytens[4] helps us avoid setting the underflow */
 /* flag unnecessarily.  It leads to a song and dance at the end of strtod. */
-static _CONST double tinytens[] = { 1e-16, 1e-32,
+static _CONST double tinytens[] PROGMEM = { 1e-16, 1e-32,
 #ifdef _DOUBLE_IS_32BITS
 				    0.0, 0.0, 0.0
 #else

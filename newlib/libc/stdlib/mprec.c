@@ -85,6 +85,7 @@
 #include <string.h>
 #include <reent.h>
 #include "mprec.h"
+#include "../machine/xtensa/pgmspace.h"
 
 /* This is defined in sys/reent.h as (sizeof (size_t) << 3) now, as in NetBSD.
    The old value of 15 was wrong and made newlib vulnerable against buffer
@@ -952,7 +953,7 @@ _DEFUN (ratio, (a, b), _Bigint * a _AND _Bigint * b)
 
 
 _CONST double
-  tens[] =
+  tens[] PROGMEM =
 {
   1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9,
   1e10, 1e11, 1e12, 1e13, 1e14, 1e15, 1e16, 1e17, 1e18, 1e19,
@@ -961,16 +962,16 @@ _CONST double
 };
 
 #if !defined(_DOUBLE_IS_32BITS) && !defined(__v800)
-_CONST double bigtens[] =
+_CONST double bigtens[] PROGMEM =
 {1e16, 1e32, 1e64, 1e128, 1e256};
 
-_CONST double tinytens[] =
+_CONST double tinytens[] PROGMEM =
 {1e-16, 1e-32, 1e-64, 1e-128, 1e-256};
 #else
-_CONST double bigtens[] =
+_CONST double bigtens[] PROGMEM =
 {1e16, 1e32};
 
-_CONST double tinytens[] =
+_CONST double tinytens[] PROGMEM =
 {1e-16, 1e-32};
 #endif
 
