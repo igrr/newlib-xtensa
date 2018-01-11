@@ -43,6 +43,7 @@
 #include "fvwrite.h"
 #include "vfieeefp.h"
 #include "nano-vfprintf_local.h"
+#include "../machine/xtensa/pgmspace.h"
 
 /* Decode and print non-floating point data.  */
 int
@@ -104,6 +105,20 @@ _printf_common (struct _reent *data,
 error:
   return -1;
 }
+
+// Not defined in the ESP8266 Arduino
+static const char *memchr_P(const char *src, int c, size_t length)
+{
+  while (length--)
+    {
+      if (pgm_read_byte(src) == c) 
+        return (void *) src;
+      src++; 
+    }
+
+  return NULL;
+}
+
 int
 _printf_i (struct _reent *data, struct _prt_data_t *pdata, FILE *fp,
 	   int (*pfunc)(struct _reent *, FILE *, _CONST char *, size_t len),
@@ -216,7 +231,7 @@ number:
 	 string, and take prec == -1 into consideration.
 	 Use normal Newlib approach here to support case where cp is not
 	 nul-terminated.  */
-      char *p = memchr (cp, 0, pdata->prec);
+      char *p = memchr_P (cp, 0, pdata->prec);
 
       if (p != NULL)
 	pdata->prec = p - cp;
