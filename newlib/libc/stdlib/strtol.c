@@ -123,6 +123,7 @@ No supporting OS subroutines are required.
 #include <errno.h>
 #include <stdlib.h>
 #include <reent.h>
+#include "../machine/xtensa/pgmspace.h"
 
 /*
  * Convert a string to a long integer.

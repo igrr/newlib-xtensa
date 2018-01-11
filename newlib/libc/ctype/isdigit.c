@@ -33,11 +33,12 @@ No supporting OS subroutines are required.
 
 #include <_ansi.h>
 #include <ctype.h>
+#include "../machine/xtensa/pgmspace.h"
 
 
 #undef isdigit
 int
 _DEFUN(isdigit,(c),int c)
 {
-	return(__ctype_ptr__[c+1] & _N);
+	return(pgm_red_byte(&__ctype_ptr__[c+1]) & _N);
 }

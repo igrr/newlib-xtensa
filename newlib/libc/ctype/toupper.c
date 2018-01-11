@@ -45,6 +45,7 @@ No supporting OS subroutines are required.
 
 #include <_ansi.h>
 #include <ctype.h>
+#include "../machine/xtensa/pgmspace.h"
 #if defined (_MB_EXTENDED_CHARSETS_ISO) || defined (_MB_EXTENDED_CHARSETS_WINDOWS)
 #include <limits.h>
 #include <stdio.h>

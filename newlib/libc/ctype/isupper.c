@@ -33,11 +33,12 @@ No supporting OS subroutines are required.
 */
 #include <_ansi.h>
 #include <ctype.h>
+#include "../machine/xtensa/pgmspace.h"
 
 #undef isupper
 int
 _DEFUN(isupper,(c),int c)
 {
-	return ((__ctype_ptr__[c+1] & (_U|_L)) == _U);
+	return ((pgm_read_byte(&__ctype_ptr__[c+1]) & (_U|_L)) == _U);
 }
 

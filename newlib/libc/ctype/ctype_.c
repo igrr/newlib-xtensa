@@ -36,6 +36,7 @@ static char sccsid[] = "@(#)ctype_.c	5.6 (Berkeley) 6/1/90";
 #endif /* LIBC_SCCS and not lint */
 
 #include <ctype.h>
+#include "../machine/xtensa/pgmspace.h"
 
 #define _CTYPE_DATA_0_127 \
 	_C,	_C,	_C,	_C,	_C,	_C,	_C,	_C, \
@@ -137,7 +138,7 @@ _CONST char _ctype_[1 + 256] = {
 
 #else	/* !defined(ALLOW_NEGATIVE_CTYPE_INDEX) */
 
-_CONST char _ctype_[1 + 256] = {
+_CONST char _ctype_[1 + 256] PROGMEM = {
 	0,
 	_CTYPE_DATA_0_127,
 	_CTYPE_DATA_128_255

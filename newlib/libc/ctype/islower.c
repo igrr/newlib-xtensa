@@ -34,11 +34,12 @@ No supporting OS subroutines are required.
 */
 #include <_ansi.h>
 #include <ctype.h>
+#include "../machine/xtensa/pgmspace.h"
 
 #undef islower
 int
 _DEFUN(islower,(c),int c)
 {
-	return ((__ctype_ptr__[c+1] & (_U|_L)) == _L);
+	return ((pgm_read_byte(&__ctype_ptr__[c+1]) & (_U|_L)) == _L);
 }
 
