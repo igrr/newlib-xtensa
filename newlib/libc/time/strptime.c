@@ -38,10 +38,11 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include "../locale/timelocal.h"
+#include "../machine/xtensa/pgmspace.h"
 
 #define _ctloc(x) (_CurrentTimeLocale->x)
 
-static _CONST int _DAYS_BEFORE_MONTH[12] =
+static _CONST short _DAYS_BEFORE_MONTH[12] PROGMEM =
 {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
 
 #define SET_MDAY 1
@@ -426,7 +427,7 @@ _DEFUN (strptime, (buf, format, timeptr),
 
 	if (!(ymd & SET_YDAY)) {
 	    /* ...not tm_yday, so fill it in */
-	    timeptr->tm_yday = _DAYS_BEFORE_MONTH[timeptr->tm_mon]
+	    timeptr->tm_yday = pgm_read_word(&_DAYS_BEFORE_MONTH[timeptr->tm_mon])
 		+ timeptr->tm_mday;
 	    if (!is_leap_year (timeptr->tm_year + tm_year_base)
 		|| timeptr->tm_mon < 2)
@@ -441,13 +442,13 @@ _DEFUN (strptime, (buf, format, timeptr),
 
 	if (!(ymd & SET_MON)) {
 	    /* ...not tm_mon, so fill it in, and/or... */
-	    if (timeptr->tm_yday < _DAYS_BEFORE_MONTH[1])
+	    if (timeptr->tm_yday < pgm_read_word(&_DAYS_BEFORE_MONTH[1]))
 		timeptr->tm_mon = 0;
 	    else {
 		int leap = is_leap_year (timeptr->tm_year + tm_year_base);
 		int i;
 		for (i = 2; i < 12; ++i) {
-		    if (timeptr->tm_yday < _DAYS_BEFORE_MONTH[i] + leap)
+		    if (timeptr->tm_yday < pgm_read_word(&_DAYS_BEFORE_MONTH[i]) + leap)
 			break;
 		}
 		timeptr->tm_mon = i - 1;
@@ -457,7 +458,7 @@ _DEFUN (strptime, (buf, format, timeptr),
 	if (!(ymd & SET_MDAY)) {
 	    /* ...not tm_mday, so fill it in */
 	    timeptr->tm_mday = timeptr->tm_yday
-		- _DAYS_BEFORE_MONTH[timeptr->tm_mon];
+		- pgm_read_word(&_DAYS_BEFORE_MONTH[timeptr->tm_mon]);
 	    if (!is_leap_year (timeptr->tm_year + tm_year_base)
 		|| timeptr->tm_mon < 2)
 	    {

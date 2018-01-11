@@ -50,17 +50,18 @@ ANSI C requires <<mktime>>.
 #include <stdlib.h>
 #include <time.h>
 #include "local.h"
+#include "../machine/xtensa/pgmspace.h"
 
 #define _SEC_IN_MINUTE 60L
 #define _SEC_IN_HOUR 3600L
 #define _SEC_IN_DAY 86400L
 
-static _CONST int DAYS_IN_MONTH[12] =
+static _CONST char DAYS_IN_MONTH[12] PROGMEM =
 {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-#define _DAYS_IN_MONTH(x) ((x == 1) ? days_in_feb : DAYS_IN_MONTH[x])
+#define _DAYS_IN_MONTH(x) ((x == 1) ? days_in_feb : pgm_read_byte(&DAYS_IN_MONTH[x]))
 
-static _CONST int _DAYS_BEFORE_MONTH[12] =
+static _CONST short _DAYS_BEFORE_MONTH[12] PROGMEM =
 {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
 
 #define _ISLEAP(y) (((y) % 4) == 0 && (((y) % 100) != 0 || (((y)+1900) % 400) == 0))
@@ -171,7 +172,7 @@ _DEFUN(mktime, (tim_p),
 
   /* compute days in year */
   days += tim_p->tm_mday - 1;
-  days += _DAYS_BEFORE_MONTH[tim_p->tm_mon];
+  days += pgm_read_word(&_DAYS_BEFORE_MONTH[tim_p->tm_mon]);
   if (tim_p->tm_mon > 1 && _DAYS_IN_YEAR (tim_p->tm_year) == 366)
     days++;
 
